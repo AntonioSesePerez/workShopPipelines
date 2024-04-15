@@ -58,7 +58,7 @@ spec:
 
         // credentials
         KUBERNETES_CLUSTER_CRED_ID = 'k3s-lima-vm-kubeconfig'
-        CONTAINER_REGISTRY_CRED = credentials("docker-hub-$IMAGE_ORG")
+        CONTAINER_REGISTRY_CRED = credentials("docker-hub-pipelinesWorkShop")
     }
 
     stages {
