@@ -113,6 +113,15 @@ spec:
             }
         }
 
+        //OWASP Dependency Check
+        stage('Software composition analysis') {
+            steps {
+                echo '-=- run software composition analysis -=-'
+                sh './mvnw dependency-check:check'
+                dependencyCheckPublisher
+            }
+        }
+
         //STAGE 5 - PACKAGE
         stage('Package') {
             steps {
@@ -178,6 +187,19 @@ spec:
                 )
             }
         }
+
+        //SonarQube
+        stage('Code inspection & quality gate') {
+            steps {
+                echo '-=- run code inspection & check quality gate -=-'
+                withSonarQubeEnv('ci-sonarqube') {
+                    sh './mvnw sonar:sonar'
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }        
 
         //STAGE 10 [FINAL] - PROMOTE CONTAINER IMAGE
         stage('Promote container image') {
